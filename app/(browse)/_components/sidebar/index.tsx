@@ -1,10 +1,21 @@
-import React from 'react'
-import Wrapper from './Wrapper'
+import React from "react";
+import Wrapper from "./Wrapper";
+import Toggle from "./Toggle";
+import Recommended from "./recommended";
+import { getRecommended } from "@/lib/recommended-service";
 
-const Sidebar = () => {
+const Sidebar = async () => {
+  const recommended = await getRecommended();
+
   return (
-    <Wrapper>Sidebar</Wrapper>
-  )
-}
+    <Wrapper>
+      <Toggle />
 
-export default Sidebar
+      <div className="space-y-4 pt-4 lg:pt-0">
+        <Recommended data={recommended} />
+      </div>
+    </Wrapper>
+  );
+};
+
+export default Sidebar;
