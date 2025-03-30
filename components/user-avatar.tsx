@@ -4,6 +4,7 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { cn } from "@/lib/utils";
 import LiveBadge from "./live-badge";
+import { Skeleton } from "./ui/skeleton";
 
 const avatarSizes = cva("", {
   variants: {
@@ -49,13 +50,19 @@ const UserAvatar = ({
         </AvatarFallback>
       </Avatar>
 
-      {canShowBadge && (
+      {/* {canShowBadge && (
         <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
           <LiveBadge />
         </div>
-      )}
+      )} */}
     </div>
   );
 };
 
 export default UserAvatar;
+
+interface UserAvatarSkeletonProps extends VariantProps<typeof avatarSizes> {}
+
+export const UserAvatarSkelaton = ({ size }: UserAvatarSkeletonProps) => {
+  <Skeleton className={cn("rounded-full", avatarSizes({ size }))} />;
+};

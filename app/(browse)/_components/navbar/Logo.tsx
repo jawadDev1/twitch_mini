@@ -25,7 +25,7 @@ const Logo = () => {
 
         <div className={cn("hidden lg:block", font.className)}>
           <p className="text-lg font-semibold">GameHub</p>
-          <p className="text-xs text-muted-foreground">Let's Play</p>
+          <p className="text-xs text-muted-foreground">Let&apos;s Play</p>
         </div>
       </div>
     </Link>
