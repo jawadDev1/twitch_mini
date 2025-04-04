@@ -8,11 +8,11 @@ export const getFollowedUsers = async () => {
 
     const followedUsers = await db.follow.findMany({
       where: {
-        followerId: self.id,
+        followerId: self?.id,
         following: {
           blocking: {
             none: {
-              blockedId: self.id,
+              blockedId: self?.id,
             },
           },
         },
@@ -43,11 +43,11 @@ export const isFollowingUser = async (id: string) => {
       throw new Error("User not found");
     }
 
-    if (self.id == OtherUser.id) return true;
+    if (self?.id == OtherUser.id) return true;
 
     const existingFollow = await db.follow.findFirst({
       where: {
-        followerId: self.id,
+        followerId: self?.id,
         followingId: OtherUser.id,
       },
     });
@@ -61,6 +61,9 @@ export const isFollowingUser = async (id: string) => {
 export const followUser = async (id: string) => {
   const self = await getSelf();
 
+  if (!self) {
+    throw new Error("Not authenticated");
+  }
   const otherUser = await db.user.findUnique({
     where: {
       id,
@@ -71,13 +74,13 @@ export const followUser = async (id: string) => {
     throw new Error("User not found");
   }
 
-  if (otherUser.id === self.id) {
+  if (otherUser.id === self?.id) {
     throw new Error("Cannot follow yourself");
   }
 
   const existingFollow = await db.follow.findFirst({
     where: {
-      followerId: self.id,
+      followerId: self?.id,
       followingId: otherUser.id,
     },
   });
@@ -113,13 +116,13 @@ export const unfollowUser = async (id: string) => {
     throwError("User does not exist");
   }
 
-  if (otherUser?.id == self.id) {
+  if (otherUser?.id == self?.id) {
     throwError("Cannot unfollow yourselft");
   }
 
   const existingFollow = await db.follow.findFirst({
     where: {
-      followerId: self.id,
+      followerId: self?.id,
       followingId: otherUser?.id,
     },
   });
