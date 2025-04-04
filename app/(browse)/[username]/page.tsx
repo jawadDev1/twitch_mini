@@ -3,14 +3,16 @@ import { getUserByUsername } from "@/services/user-service";
 import { notFound } from "next/navigation";
 import React from "react";
 import Action from "./_components/actions";
+import { isBlocked } from "@/services/block-service";
 
 interface UsernameProps {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
 }
 
-const UserPage = async ({ params }: UsernameProps) => {
+const UserPage = async (props: UsernameProps) => {
+  const params = await props.params;
   const { username } = params;
   const user = await getUserByUsername(username);
 
@@ -19,6 +21,11 @@ const UserPage = async ({ params }: UsernameProps) => {
   }
 
   const isFollowing = await isFollowingUser(user.id);
+  const isBlockedByThisUser = await isBlocked(user.id);
+
+  // if (isBlockedByThisUser) {
+  //   notFound();
+  // }
 
   return (
     <div className="flex flex-col gap-y-4">

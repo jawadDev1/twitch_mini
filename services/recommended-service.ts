@@ -7,44 +7,57 @@ export const getRecommended = async () => {
 
   try {
     const self = await getSelf();
-    userId = self.id;
+    userId = self?.id;
   } catch (error) {
     userId = null;
   }
 
-  let users: User[] = [];
+  try {
+    let users: User[] = [];
 
-  if (userId) {
-    users = await db.user.findMany({
-      orderBy: {
-        createAt: "desc",
-      },
-      where: {
-        AND: [
-          {
-            NOT: {
-              id: userId,
+    if (userId) {
+      users = await db.user.findMany({
+        orderBy: {
+          createAt: "desc",
+        },
+        where: {
+          AND: [
+            {
+              NOT: {
+                id: userId,
+              },
             },
-          },
-          {
-            NOT: {
-              followedBy: {
-                some: {
-                  followerId: userId,
+            {
+              NOT: {
+                followedBy: {
+                  some: {
+                    followerId: userId,
+                  },
                 },
               },
             },
-          },
-        ],
-      },
-    });
-  } else {
-    users = await db.user.findMany({
-      orderBy: {
-        createAt: "desc",
-      },
-    });
-  }
+            {
+              NOT: {
+                blocking: {
+                  some: {
+                    blockedId: userId,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+    } else {
+      users = await db.user.findMany({
+        orderBy: {
+          createAt: "desc",
+        },
+      });
+    }
 
-  return users;
+    return users;
+  } catch (error) {
+    return [];
+  }
 };
